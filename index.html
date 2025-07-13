@@ -18,6 +18,27 @@
   />
 
   <link rel="stylesheet" href="style.css" />
+  <style>
+    #scrollToDirectionsBtn {
+      display: none;
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      padding: 10px 15px;
+      background-color: #007bff;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      font-size: 14px;
+      z-index: 1000;
+    }
+
+    @media (max-width: 768px) {
+      #scrollToDirectionsBtn {
+        display: block;
+      }
+    }
+  </style>
 </head>
 <body>
   <h1>Routique</h1>
@@ -42,6 +63,8 @@
     <div id="map"></div>
   </div>
 
+  <button id="scrollToDirectionsBtn">View Directions</button>
+
   <!-- Leaflet JS from CDN -->
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
@@ -53,5 +76,11 @@
 
   <!-- Your main JavaScript -->
   <script src="main.js"></script>
+  <script>
+    document.getElementById('scrollToDirectionsBtn').addEventListener('click', () => {
+      const directionsEl = document.getElementById('directions');
+      directionsEl.scrollIntoView({ behavior: 'smooth' });
+    });
+  </script>
 </body>
 </html>
