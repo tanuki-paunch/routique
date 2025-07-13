@@ -29,6 +29,14 @@
         <label><input type="checkbox" id="avoidHighways" /> Avoid highways</label>
         <button id="routeBtn">Plan Route</button>
       </div>
+      <div id="legend">
+        <h3>Scenic Features</h3>
+        <ul>
+          <li><span style="color:green;">●</span> Parks & Nature Reserves</li>
+          <li><span style="color:darkgreen;">●</span> Forests</li>
+          <li><span style="color:blue;">●</span> Viewpoints</li>
+        </ul>
+      </div>
       <div id="directions"></div>
     </div>
     <div id="map"></div>
@@ -39,6 +47,9 @@
 
   <!-- Leaflet Control Geocoder JS from CDN -->
   <script src="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.js"></script>
+
+  <!-- OSM to GeoJSON Converter -->
+  <script src="https://unpkg.com/osmtogeojson@3.0.0/osmtogeojson.js"></script>
 
   <!-- Your main JavaScript -->
   <script src="main.js"></script>
