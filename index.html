@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Routique</title>
+
+  <!-- Leaflet CSS from CDN -->
+  <link
+    rel="stylesheet"
+    href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+  />
+
+  <!-- Leaflet Control Geocoder CSS -->
+  <link
+    rel="stylesheet"
+    href="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.css"
+  />
+
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <h1>Routique</h1>
+  <div id="app">
+    <div id="sidebar">
+      <div id="controls">
+        <input type="text" id="start" placeholder="Start address" />
+        <input type="text" id="end" placeholder="End address" />
+        <label><input type="checkbox" id="avoidHighways" /> Avoid highways</label>
+        <button id="routeBtn">Plan Route</button>
+      </div>
+      <div id="directions"></div>
+    </div>
+    <div id="map"></div>
+  </div>
+
+  <!-- Leaflet JS from CDN -->
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+  <!-- Leaflet Control Geocoder JS from CDN -->
+  <script src="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.js"></script>
+
+  <!-- Your main JavaScript -->
+  <script src="main.js"></script>
+</body>
+</html>
