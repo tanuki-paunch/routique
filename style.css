@@ -1,4 +1,4 @@
-/* General layout */
+/* Reset and layout */
 body, html {
   margin: 0;
   padding: 0;
@@ -6,42 +6,75 @@ body, html {
   font-family: sans-serif;
 }
 
+h1 {
+  margin: 0;
+  padding: 0.5em;
+  font-size: 1.4em;
+  background: #007bff;
+  color: white;
+  text-align: center;
+}
+
 #app {
   display: flex;
-  flex-direction: row;
+  height: calc(100% - 90px);
+}
+
+/* Tabs */
+.tab-buttons {
+  display: flex;
+  justify-content: space-around;
+  background: #eee;
+}
+
+.tab-button {
+  flex: 1;
+  padding: 0.75em;
+  border: none;
+  background: #ddd;
+  font-size: 1em;
+  cursor: pointer;
+}
+
+.tab-button.active {
+  background: #ccc;
+  font-weight: bold;
+}
+
+.tab-content {
+  display: none;
+  flex: 1;
+}
+
+.map-tab {
   height: 100%;
 }
 
-/* Sidebar */
-#sidebar {
-  width: 300px;
-  max-width: 100%;
-  background: #f4f4f4;
-  display: flex;
-  flex-direction: column;
+.directions-tab {
   padding: 1em;
   box-sizing: border-box;
   overflow-y: auto;
+  background: #f8f8f8;
 }
 
-#controls {
-  margin-bottom: 1em;
-}
-
+/* Map */
 #map {
-  flex: 1;
   height: 100%;
+  width: 100%;
 }
 
-/* Directions list */
-#directions {
-  flex-grow: 1;
-  overflow-y: auto;
-  max-height: 300px;
+/* Sidebar and controls */
+#controls input, #controls button {
+  width: 100%;
+  margin-bottom: 0.5em;
+  font-size: 1em;
+  padding: 0.5em;
+  box-sizing: border-box;
 }
 
-#directions ul {
-  padding-left: 1.2em;
+.avoid-label {
+  display: block;
+  margin-bottom: 0.5em;
 }
 
 #legend {
@@ -49,24 +82,26 @@ body, html {
   margin-bottom: 1em;
 }
 
-/* Mobile layout */
-@media (max-width: 768px) {
+#directions ul {
+  padding-left: 1.2em;
+}
+
+/* Responsive */
+@media (min-width: 769px) {
+  .tab-buttons {
+    display: none;
+  }
+
   #app {
-    flex-direction: column;
+    flex-direction: row;
   }
 
-  #sidebar {
-    width: 100%;
-    height: auto;
-    max-height: 50%;
-    overflow-y: auto;
+  .tab-content {
+    display: block !important;
   }
 
-  #map {
-    height: 50%;
-  }
-
-  #directions {
-    max-height: 200px;
+  .directions-tab {
+    width: 300px;
+    max-width: 100%;
   }
 }

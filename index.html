@@ -6,48 +6,25 @@
   <title>Routique</title>
 
   <!-- Leaflet CSS from CDN -->
-  <link
-    rel="stylesheet"
-    href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
-  />
-
-  <!-- Leaflet Control Geocoder CSS -->
-  <link
-    rel="stylesheet"
-    href="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.css"
-  />
-
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <link rel="stylesheet" href="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.css" />
   <link rel="stylesheet" href="style.css" />
-  <style>
-    #scrollToDirectionsBtn {
-      display: none;
-      position: fixed;
-      bottom: 20px;
-      right: 20px;
-      padding: 10px 15px;
-      background-color: #007bff;
-      color: white;
-      border: none;
-      border-radius: 5px;
-      font-size: 14px;
-      z-index: 1000;
-    }
-
-    @media (max-width: 768px) {
-      #scrollToDirectionsBtn {
-        display: block;
-      }
-    }
-  </style>
+  <link rel="icon" href="data:;base64,iVBORw0KGgo=" />
 </head>
 <body>
   <h1>Routique</h1>
+
+  <div class="tab-buttons">
+    <button class="tab-button" data-tab="map">Map</button>
+    <button class="tab-button" data-tab="directions">Directions</button>
+  </div>
+
   <div id="app">
-    <div id="sidebar">
+    <div id="sidebar" class="tab-content directions-tab">
       <div id="controls">
         <input type="text" id="start" placeholder="Start address" />
         <input type="text" id="end" placeholder="End address" />
-        <label><input type="checkbox" id="avoidHighways" /> Avoid highways</label>
+        <label class="avoid-label"><input type="checkbox" id="avoidHighways" /> Avoid highways</label>
         <button id="routeBtn">Plan Route</button>
       </div>
       <div id="legend">
@@ -60,27 +37,29 @@
       </div>
       <div id="directions"></div>
     </div>
-    <div id="map"></div>
+    <div id="map" class="tab-content map-tab"></div>
   </div>
 
-  <button id="scrollToDirectionsBtn">View Directions</button>
-
-  <!-- Leaflet JS from CDN -->
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-
-  <!-- Leaflet Control Geocoder JS from CDN -->
   <script src="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.js"></script>
-
-  <!-- OSM to GeoJSON Converter -->
   <script src="https://unpkg.com/osmtogeojson@3.0.0/osmtogeojson.js"></script>
-
-  <!-- Your main JavaScript -->
   <script src="main.js"></script>
   <script>
-    document.getElementById('scrollToDirectionsBtn').addEventListener('click', () => {
-      const directionsEl = document.getElementById('directions');
-      directionsEl.scrollIntoView({ behavior: 'smooth' });
+    // Tab switching logic
+    const tabButtons = document.querySelectorAll('.tab-button');
+    const tabContents = document.querySelectorAll('.tab-content');
+
+    tabButtons.forEach(btn => {
+      btn.addEventListener('click', () => {
+        const tab = btn.dataset.tab;
+        tabContents.forEach(c => c.style.display = c.classList.contains(`${tab}-tab`) ? 'block' : 'none');
+        tabButtons.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+      });
     });
+
+    // Set default active tab
+    tabButtons[0].click();
   </script>
 </body>
 </html>
