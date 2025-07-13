@@ -1,39 +1,39 @@
-body {
-  margin: 0;
-  font-family: sans-serif;
+#app {
+  display: flex; /* Makes #app a flex container */
+  flex-direction: row; /* Default: sidebar and map side-by-side */
+  height: calc(100vh - 60px); /* Adjust based on your h1 height */
+  /* You might want to set a min-height for smaller screens */
 }
-h1 {
-  text-align: center;
-  margin: 0.5em;
+
+#sidebar {
+  flex: 0 0 300px; /* Non-growing, non-shrinking, base width 300px */
+  /* Or use a percentage for more flexibility: flex: 0 0 30%; */
+  padding: 10px;
+  overflow-y: auto; /* If content in sidebar might exceed height */
 }
-#controls {
-  display: flex;
-  justify-content: center;
-  gap: 10px;
-  padding: 0.5em;
-}
+
 #map {
-  height: calc(100vh - 100px);
-  width: 100%;
+  flex-grow: 1; /* Allows the map to take up the remaining space */
 }
-input {
-  width: 150px;
-  padding: 5px;
+
+/* Basic styling for inputs and button */
+#controls input[type="text"] {
+    width: 100%;
+    padding: 8px;
+    margin-bottom: 10px;
+    box-sizing: border-box; /* Include padding and border in the element's total width */
 }
-button {
-  padding: 5px 10px;
+
+#controls button {
+    width: 100%;
+    padding: 10px;
+    background-color: #007bff; /* Example color */
+    color: white;
+    border: none;
+    cursor: pointer;
 }
+
 #directions {
-  padding: 1em;
-  font-family: sans-serif;
-  background: #f9f9f9;
-  border-top: 1px solid #ccc;
-  max-height: 200px;
-  overflow-y: auto;
-}
-#directions h2 {
-  margin-top: 0;
-}
-#directions ul {
-  padding-left: 1.2em;
+    margin-top: 20px;
+    /* Add styling for directions content */
 }
