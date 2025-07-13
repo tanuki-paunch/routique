@@ -1,39 +1,220 @@
+/* General Box Sizing for consistent layout */
+* {
+  box-sizing: border-box;
+}
+
+/* Body and HTML base styles */
+html, body {
+  margin: 0;
+  padding: 0;
+  font-family: 'Inter', sans-serif; /* Using Inter font */
+  height: 100%; /* Ensure html and body take full height */
+  overflow: hidden; /* Prevent overall scrollbars unless content dictates */
+  background-color: #f4f7f6; /* Light background */
+  color: #333;
+}
+
+/* Main heading style */
+h1 {
+  text-align: center;
+  padding: 15px 0;
+  margin: 0;
+  background-color: #2c3e50; /* Darker header background */
+  color: #ecf0f1; /* Light text color */
+  font-size: 2.2em;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+/* Main application container */
 #app {
-  display: flex; /* Makes #app a flex container */
-  flex-direction: row; /* Default: sidebar and map side-by-side */
-  height: calc(100vh - 60px); /* Adjust based on your h1 height */
-  /* You might want to set a min-height for smaller screens */
+  display: flex; /* Use flexbox for main layout */
+  flex-direction: row; /* Default to row for larger screens */
+  height: calc(100vh - 70px); /* Full viewport height minus header height */
+  overflow: hidden; /* Prevent scrolling within #app itself */
 }
 
+/* Sidebar styles */
 #sidebar {
-  flex: 0 0 300px; /* Non-growing, non-shrinking, base width 300px */
-  /* Or use a percentage for more flexibility: flex: 0 0 30%; */
-  padding: 10px;
-  overflow-y: auto; /* If content in sidebar might exceed height */
+  flex: 0 0 320px; /* Fixed width sidebar on larger screens */
+  padding: 20px;
+  background-color: #ffffff; /* White background for sidebar */
+  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.05);
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto; /* Allow scrolling if directions are long */
+  border-radius: 8px; /* Rounded corners */
+  margin: 10px;
 }
 
-#map {
-  flex-grow: 1; /* Allows the map to take up the remaining space */
+/* Controls section within sidebar */
+#controls {
+  margin-bottom: 20px;
 }
 
-/* Basic styling for inputs and button */
+/* Input field styles */
 #controls input[type="text"] {
-    width: 100%;
-    padding: 8px;
-    margin-bottom: 10px;
-    box-sizing: border-box; /* Include padding and border in the element's total width */
+  width: 100%;
+  padding: 12px;
+  margin-bottom: 15px;
+  border: 1px solid #ddd;
+  border-radius: 5px; /* Rounded corners */
+  font-size: 1em;
+  transition: border-color 0.3s ease;
 }
 
-#controls button {
-    width: 100%;
-    padding: 10px;
-    background-color: #007bff; /* Example color */
-    color: white;
-    border: none;
-    cursor: pointer;
+#controls input[type="text"]:focus {
+  border-color: #007bff; /* Highlight on focus */
+  outline: none;
 }
 
+/* Checkbox label styling */
+#controls label {
+  display: flex;
+  align-items: center;
+  margin-bottom: 15px;
+  font-size: 1em;
+  color: #555;
+}
+
+#controls input[type="checkbox"] {
+  margin-right: 8px;
+  transform: scale(1.2); /* Slightly larger checkbox */
+}
+
+/* Button styles */
+#routeBtn {
+  width: 100%;
+  padding: 12px 20px;
+  background-color: #007bff; /* Primary blue color */
+  color: white;
+  border: none;
+  border-radius: 5px; /* Rounded corners */
+  font-size: 1.1em;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  box-shadow: 0 4px 6px rgba(0, 123, 255, 0.2); /* Subtle shadow */
+}
+
+#routeBtn:hover {
+  background-color: #0056b3; /* Darker blue on hover */
+  transform: translateY(-2px); /* Slight lift effect */
+}
+
+#routeBtn:active {
+  background-color: #004085; /* Even darker on click */
+  transform: translateY(0);
+}
+
+/* Directions display area */
 #directions {
-    margin-top: 20px;
-    /* Add styling for directions content */
+  flex-grow: 1; /* Allows directions to take remaining space */
+  padding: 10px;
+  background-color: #f9f9f9;
+  border: 1px solid #eee;
+  border-radius: 5px;
+  font-size: 0.95em;
+  color: #444;
+  line-height: 1.6;
+}
+
+#directions ul {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+
+#directions li {
+  margin-bottom: 8px;
+  padding-left: 15px;
+  position: relative;
+}
+
+#directions li:before {
+  content: '▶'; /* Simple arrow icon */
+  position: absolute;
+  left: 0;
+  color: #007bff;
+  font-size: 0.8em;
+  top: 3px;
+}
+
+
+/* Map container styles */
+#map {
+  flex-grow: 1; /* Map takes up all available space */
+  background-color: #e0e0e0; /* Placeholder background for map */
+  border-radius: 8px; /* Rounded corners */
+  margin: 10px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+/* Media Queries for Responsiveness */
+
+/* For screens smaller than 992px (e.g., tablets in portrait) */
+@media (max-width: 992px) {
+  #sidebar {
+    flex: 0 0 280px; /* Slightly narrower sidebar */
+  }
+}
+
+/* For screens smaller than 768px (e.g., typical mobile devices) */
+@media (max-width: 768px) {
+  #app {
+    flex-direction: column; /* Stack sidebar and map vertically */
+    height: auto; /* Allow height to adjust based on content */
+    overflow-y: auto; /* Allow scrolling for the entire app on mobile */
+  }
+
+  h1 {
+    font-size: 1.8em; /* Adjust heading size */
+    padding: 10px 0;
+  }
+
+  #sidebar {
+    flex: 1 1 auto; /* Sidebar takes full width, adjusts height */
+    width: auto; /* Override fixed width */
+    margin: 10px; /* Maintain margin */
+    order: 1; /* Ensure sidebar comes first */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05); /* Add shadow for separation */
+  }
+
+  #map {
+    flex: 1 1 auto; /* Map takes full width, adjusts height */
+    width: auto; /* Override fixed width */
+    height: 350px; /* Give the map a fixed height on mobile */
+    min-height: 250px; /* Ensure map is visible */
+    margin: 10px; /* Maintain margin */
+    order: 2; /* Map comes after sidebar */
+  }
+
+  #controls input[type="text"],
+  #controls button {
+    font-size: 0.95em; /* Slightly smaller font for inputs/buttons */
+    padding: 10px;
+  }
+
+  #directions {
+    font-size: 0.9em; /* Smaller font for directions */
+  }
+}
+
+/* For very small screens (e.g., older phones or narrow viewports) */
+@media (max-width: 480px) {
+  h1 {
+    font-size: 1.5em; /* Even smaller heading */
+  }
+
+  #sidebar {
+    padding: 15px; /* Slightly less padding */
+  }
+
+  #controls input[type="text"],
+  #controls button {
+    font-size: 0.9em; /* Further reduce font size */
+    padding: 8px;
+  }
+
+  #map {
+    height: 300px; /* Adjust map height for very small screens */
+  }
 }
