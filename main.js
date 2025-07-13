@@ -4,10 +4,11 @@ L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
 
 let routeLayer;
 let stepLayers = [];
+let gpsMarker;
 
 const ORS_API_KEY = 'eyJvcmciOiI1YjNjZTM1OTc4NTExMTAwMDFjZjYyNDgiLCJpZCI6ImZmZDdjYmQ2YzQ0YTQzZDA4MTk5NTVjMDU4ZGEzNzdmIiwiaCI6Im11cm11cjY0In0=';
 
-// Add address search box with Photon (autocomplete)
+// Add address search via Photon
 L.Control.geocoder({
   defaultMarkGeocode: false,
   geocoder: L.Control.Geocoder.photon()
@@ -18,15 +19,48 @@ L.Control.geocoder({
 })
 .addTo(map);
 
-// Load previously traveled road segments
+// Start GPS tracking and show current position
+function startGPS() {
+  if (!navigator.geolocation) {
+    alert("Geolocation is not supported by your browser.");
+    return;
+  }
+
+  navigator.geolocation.watchPosition(
+    pos => {
+      const { latitude, longitude } = pos.coords;
+      const latlng = [latitude, longitude];
+
+      if (!gpsMarker) {
+        gpsMarker = L.marker(latlng, {
+          title: "Your location",
+          icon: L.icon({
+            iconUrl: "https://cdn-icons-png.flaticon.com/512/684/684908.png",
+            iconSize: [25, 25],
+            iconAnchor: [12, 12]
+          })
+        }).addTo(map);
+      } else {
+        gpsMarker.setLatLng(latlng);
+      }
+    },
+    err => {
+      console.error("GPS error:", err);
+      alert("Could not get GPS position.");
+    },
+    { enableHighAccuracy: true }
+  );
+}
+startGPS();
+
+// Previously traveled road tracking
 const traveledRoadHashes = new Set(JSON.parse(localStorage.getItem('routique-road-hashes') || '[]'));
 
-// Simple hash function for route segments
 function hashSegment(coords) {
   return coords.map(c => c.join(",")).join("|");
 }
 
-// Plan Route button handler
+// Route planning
 document.getElementById('routeBtn').addEventListener('click', async () => {
   const start = document.getElementById('start').value;
   const end = document.getElementById('end').value;
@@ -66,7 +100,7 @@ document.getElementById('routeBtn').addEventListener('click', async () => {
       throw new Error("Invalid GeoJSON response from ORS.");
     }
 
-    // Remove previous route
+    // Remove old route and step overlays
     if (routeLayer) map.removeLayer(routeLayer);
     stepLayers.forEach(l => map.removeLayer(l));
     stepLayers = [];
@@ -75,14 +109,13 @@ document.getElementById('routeBtn').addEventListener('click', async () => {
     routeLayer = L.geoJSON(segment).addTo(map);
     map.fitBounds(routeLayer.getBounds());
 
-    // Save route segment if not already traveled
+    // Track previously traveled roads
     const coordsHash = hashSegment(segment.geometry.coordinates);
     if (!traveledRoadHashes.has(coordsHash)) {
       traveledRoadHashes.add(coordsHash);
       localStorage.setItem('routique-road-hashes', JSON.stringify([...traveledRoadHashes]));
     }
 
-    // Show directions + step lines
     const steps = segment.properties.segments[0].steps;
     renderDirections(steps);
     renderStepsOnMap(segment.geometry.coordinates, steps);
@@ -92,7 +125,7 @@ document.getElementById('routeBtn').addEventListener('click', async () => {
   }
 });
 
-// Use Photon to geocode addresses into [lon, lat]
+// Convert address to [lon, lat]
 async function geocode(address) {
   const res = await fetch(`https://photon.komoot.io/api/?q=${encodeURIComponent(address)}&limit=1`);
   const json = await res.json();
@@ -101,10 +134,10 @@ async function geocode(address) {
     throw new Error('No location found for: ' + address);
   }
 
-  return json.features[0].geometry.coordinates; // [lon, lat]
+  return json.features[0].geometry.coordinates;
 }
 
-// Display step-by-step directions in the sidebar
+// Show step-by-step directions (in miles)
 function renderDirections(steps) {
   const dirBox = document.getElementById('directions');
   if (!steps || !steps.length) {
@@ -113,9 +146,9 @@ function renderDirections(steps) {
   }
 
   const listItems = steps.map(step => {
-    const distance = (step.distance / 1000).toFixed(1);
-    const duration = Math.round(step.duration / 60);
-    return `<li><strong>${step.instruction}</strong><br><small>${distance} km, ${duration} min</small></li>`;
+    const distance = (step.distance * 0.000621371).toFixed(1); // miles
+    const duration = Math.round(step.duration / 60); // minutes
+    return `<li><strong>${step.instruction}</strong><br><small>${distance} mi, ${duration} min</small></li>`;
   }).join('');
 
   dirBox.innerHTML = `
@@ -124,7 +157,7 @@ function renderDirections(steps) {
   `;
 }
 
-// Draw each step of the route separately in orange
+// Highlight each step with an orange line
 function renderStepsOnMap(routeCoords, steps) {
   steps.forEach(step => {
     const waypoints = step.way_points;
