@@ -9,7 +9,6 @@ let scenicLayer;
 
 const ORS_API_KEY = 'eyJvcmciOiI1YjNjZTM1OTc4NTExMTAwMDFjZjYyNDgiLCJpZCI6ImZmZDdjYmQ2YzQ0YTQzZDA4MTk5NTVjMDU4ZGEzNzdmIiwiaCI6Im11cm11cjY0In0=';
 
-// Geocoder
 L.Control.geocoder({
   defaultMarkGeocode: false,
   geocoder: L.Control.Geocoder.photon()
@@ -20,7 +19,6 @@ L.Control.geocoder({
 })
 .addTo(map);
 
-// Start GPS
 function startGPS() {
   if (!navigator.geolocation) {
     alert("Geolocation is not supported by your browser.");
@@ -53,7 +51,6 @@ function startGPS() {
 }
 startGPS();
 
-// Scenic overlay
 map.on("moveend", loadScenicOverlays);
 function loadScenicOverlays() {
   if (scenicLayer) map.removeLayer(scenicLayer);
@@ -95,13 +92,11 @@ function loadScenicOverlays() {
   .catch(err => console.error("Scenic overlay error:", err));
 }
 
-// Travel memory
 const traveledRoadHashes = new Set(JSON.parse(localStorage.getItem('routique-road-hashes') || '[]'));
 function hashSegment(coords) {
   return coords.map(c => c.join(",")).join("|");
 }
 
-// Route planning
 document.getElementById('routeBtn').addEventListener('click', async () => {
   const start = document.getElementById('start').value;
   const end = document.getElementById('end').value;
@@ -148,10 +143,6 @@ document.getElementById('routeBtn').addEventListener('click', async () => {
     const steps = segment.properties.segments[0].steps;
     renderDirections(steps);
     renderStepsOnMap(segment.geometry.coordinates, steps);
-
-    // Auto-switch to map tab if hidden
-    const mapTab = document.querySelector('[data-tab="map"]');
-    if (mapTab) mapTab.click();
   } catch (err) {
     alert("Error retrieving the route.");
     console.error("Route error:", err);
@@ -159,31 +150,4 @@ document.getElementById('routeBtn').addEventListener('click', async () => {
 });
 
 async function geocode(address) {
-  const res = await fetch(`https://photon.komoot.io/api/?q=${encodeURIComponent(address)}&limit=1`);
-  const json = await res.json();
-  if (!json.features.length) throw new Error('No location found: ' + address);
-  return json.features[0].geometry.coordinates;
-}
-
-function renderDirections(steps) {
-  const dirBox = document.getElementById('directions');
-  if (!steps?.length) {
-    dirBox.innerHTML = '<p>No turn-by-turn instructions available.</p>';
-    return;
-  }
-  const listItems = steps.map(step => {
-    const distance = (step.distance * 0.000621371).toFixed(1);
-    const duration = Math.round(step.duration / 60);
-    return `<li><strong>${step.instruction}</strong><br><small>${distance} mi, ${duration} min</small></li>`;
-  }).join('');
-  dirBox.innerHTML = `<h2>Turn-by-Turn Directions</h2><ul>${listItems}</ul>`;
-}
-
-function renderStepsOnMap(routeCoords, steps) {
-  steps.forEach(step => {
-    const waypoints = step.way_points;
-    const stepCoords = routeCoords.slice(waypoints[0], waypoints[1] + 1).map(([lon, lat]) => [lat, lon]);
-    const line = L.polyline(stepCoords, { color: 'orange', weight: 3, opacity: 0.7 }).addTo(map);
-    stepLayers.push(line);
-  });
-}
+  const res = await fetch(`https://photon.komoot.io/api/?q=${encodeURICo
