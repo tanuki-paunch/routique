@@ -5,29 +5,35 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Routique</title>
 
-  <!-- Leaflet CSS from CDN -->
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
   <link rel="stylesheet" href="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.css" />
   <link rel="stylesheet" href="style.css" />
   <link rel="icon" href="data:;base64,iVBORw0KGgo=" />
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 </head>
 <body>
-  <h1>Routique</h1>
-
   <div id="app">
     <div id="sidebar">
+      <h1>Routique</h1>
       <div id="controls">
-        <input type="text" id="start" placeholder="Start address" />
-        <input type="text" id="end" placeholder="End address" />
-        <label class="avoid-label"><input type="checkbox" id="avoidHighways" /> Avoid highways</label>
+        <div class="input-group">
+          <input type="text" id="start" placeholder="Start address" aria-label="Start address"/>
+          <button id="gpsStart" class="icon-button" title="Use current location as start"><i class="material-icons">gps_fixed</i></button>
+        </div>
+        <div class="input-group">
+          <input type="text" id="end" placeholder="End address" aria-label="End address"/>
+        </div>
+        <label class="avoid-label">
+          <input type="checkbox" id="avoidHighways" /> Avoid highways
+        </label>
         <button id="routeBtn">Plan Route</button>
       </div>
       <div id="legend">
         <h3>Scenic Features</h3>
         <ul>
-          <li><span style="color:green;">●</span> Parks & Nature Reserves</li>
-          <li><span style="color:darkgreen;">●</span> Forests</li>
-          <li><span style="color:blue;">●</span> Viewpoints</li>
+          <li><span class="legend-color-box" style="background-color: green;"></span> Parks & Nature Reserves</li>
+          <li><span class="legend-color-box" style="background-color: darkgreen;"></span> Forests</li>
+          <li><span class="legend-color-box" style="background-color: blue;"></span> Viewpoints</li>
         </ul>
       </div>
       <div id="directions"></div>
